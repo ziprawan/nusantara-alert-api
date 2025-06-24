@@ -13,7 +13,7 @@ func FetchNASAEONET() ([]DisasterData, error) {
 
 	resp, err := http.Get("https://eonet.gsfc.nasa.gov/api/v3/events?bbox=94.0,6.1,141.0,-11.0")
 	if err != nil {
-		fmt.Println("bmkg: Failed to fetch URL:", err)
+		fmt.Println("nasa: Failed to fetch URL:", err)
 		return nil, err
 	}
 	defer resp.Body.Close()
@@ -21,7 +21,7 @@ func FetchNASAEONET() ([]DisasterData, error) {
 	var nasa NASAEONETResult
 	err = json.NewDecoder(resp.Body).Decode(&nasa)
 	if err != nil {
-		fmt.Println("bmkg: Failed to unmarshal response text:", err)
+		fmt.Println("nasa: Failed to unmarshal response text:", err)
 		return nil, err
 	}
 
@@ -41,7 +41,7 @@ func FetchNASAEONET() ([]DisasterData, error) {
 			fmt.Printf("eonet: Failed to parse Geometry at index %d: Expected coordinates length is 2, got %d", i, len(coord))
 			return nil, fmt.Errorf("eonet: Failed to parse Geometry at index %d: Expected coordinates length is 2, got %d", i, len(coord))
 		}
-		tmp.Coordinates = [2]float64{coord[0], coord[1]}
+		tmp.Coordinates = [2]float64{coord[1], coord[0]}
 
 		t, err := time.Parse(time.RFC3339, volc.Geometry[0].Date)
 		if err != nil {
